@@ -1,6 +1,6 @@
 public class Analyzer {
     private String[] args;
-    private String wordsize;
+    private Integer wordsize = null;
     private String inputname = null;
     private String outputname = null;
     private boolean tStatus = false;
@@ -12,15 +12,17 @@ public class Analyzer {
     }
 
     public void analise(){
-        if (args.length > 7)
-            throw new IllegalArgumentException("Error");
         int i;
         for ( i = 0; i < args.length; i++){
             switch (args[i]){
                 case "-a":
-                    wordsize = args[i + 1];
-                    i++;
-                    break;
+                    try {
+                        wordsize = Integer.parseInt(args[i + 1]);
+                        i++;
+                        break;
+                    } catch(NumberFormatException e) {
+                        throw new IllegalArgumentException("Incorrect word size!");
+                    }
                 case "-r":
                     rStatus = true;
                     break;
@@ -32,14 +34,13 @@ public class Analyzer {
                     i++;
                     break;
                 default:
-                    inputname = args[i];
+                    if(inputname == null) {
+                        inputname = args[i];
+                    } else throw new IllegalArgumentException("Too much arguments!");
             }
         }
-        if ((wordsize == null) && (!tStatus) && (!rStatus)){
-            throw new IllegalArgumentException("Error");
-        }
-        if ((wordsize == null) && ((rStatus) || (tStatus))){
-            wordsize = "10";
+        if ((wordsize == null ) && ((rStatus) || (tStatus))){
+            wordsize = 10;
         }
 
     }
@@ -49,7 +50,7 @@ public class Analyzer {
     public String getOutputname (){
         return outputname;
     }
-    public String getWordsize (){
+    public Integer getWordsize (){
         return wordsize;
     }
     public boolean getrStatus (){

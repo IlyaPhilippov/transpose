@@ -1,18 +1,12 @@
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Transposer {
-    private List<String> text;
-
-    public Transposer (List<String> text){
-        this.text = text;
-    }
-
-
     public int findMax (List<String> text){
         int max = 0;
         for (String s : text) {
@@ -23,7 +17,7 @@ public class Transposer {
         }
         return max;
     }
-    public String[][] toMatrix (List<String> text , int max){
+    public String[][] toMatrix (int max,List<String> text){
         String[][] textArr = new String[text.size()][max];
         for (int i = 0; i  < text.size(); i++) {
             String[] temp = text.get(i).trim().split(" +");
@@ -33,38 +27,57 @@ public class Transposer {
         }
         return textArr;
     }
-    public void transpose (String[][] text , int max , String outputname , boolean rStatus , boolean tStatus , String wordsize) throws IOException {
+    public void transpose (String[][] text , int max , String outputname , boolean rStatus , boolean tStatus , Integer wordsize) throws IOException {
         String[][] textArr = new String[max][text.length];
-        int size = Integer.parseInt(wordsize);
         for (int i = 0; i < max; i++) {
             for (int j = 0; j < text.length; j++) {
                 if (text[j][i] == null){
-                    text[j][i] = " ";
+                    text[j][i] = "";
                 }
                 if (tStatus){
-                    if (text[j][i].length() > size) text[j][i] = text[j][i].substring(0,size -1);
+                    if (text[j][i].length() > wordsize) text[j][i] = text[j][i].substring(0,wordsize - 1);
                 }
-                if(rStatus) {
-                    textArr[i][j] = String.format("%" + size + "s", text[j][i]);
-                }else textArr[i][j] = String.format("%-" + size + "s", text[j][i]);
+                if (rStatus) {
+                    textArr[i][j] = String.format("%" + wordsize + "s", text[j][i]);
+                }else
+                    if (wordsize != null) {textArr[i][j] = String.format("%-" + wordsize + "s", text[j][i]);}
+                    else textArr[i][j] = text[j][i];
             }
         }
-        if (outputname != null){
-            FileOutputStream out = new FileOutputStream(outputname);
-            for (int i = 0; i < max; i++) {
-                for (int j = 0; j < text.length; j++) {
-                    out.write(textArr[i][j].getBytes());
-                }
-                out.write("\n".getBytes());
-            }
+        OutputStream out;
+        if (outputname != null) {
+            out = new FileOutputStream(outputname);
         } else {
+            out = System.out;
+        }
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out))) {
             for (int i = 0; i < max; i++) {
                 for (int j = 0; j < text.length; j++) {
-                    System.out.print(textArr[i][j]);
+                    writer.write(textArr[i][j]);
+                    writer.write(' ');
                 }
-                System.out.print("\n");
+                writer.newLine();
             }
         }
     }
-
+    public void Transpose (String output , boolean rStaus , boolean tStatus , Integer wordsize , String input) throws IOException {
+        try {
+            List<String> text = new ArrayList<>();
+            Scanner in = new Scanner(System.in);
+            if (input != null) {
+                text.addAll(Files.readAllLines(Paths.get(input)));
+            } else {
+                while (in.hasNextLine()) {
+                    String line = in.nextLine();
+                    text.add(line);
+                }
+            }
+            Transposer trans = new Transposer();
+            int max = trans.findMax(text);
+            String[][] txt = trans.toMatrix(max,text);
+            trans.transpose(txt, max, output, rStaus, tStatus, wordsize);
+        }catch (NoSuchFileException e){
+            System.err.println("Invalid file name entered. Correct file name or add the full path to the file!");
+        }
+    }
     }
