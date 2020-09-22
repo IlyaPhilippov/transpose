@@ -1,6 +1,5 @@
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,6 @@ public class Transposer {
         }
     }
     public void Transpose (String output , boolean rStaus , boolean tStatus , Integer wordsize , String input) throws IOException {
-        try {
             List<String> text = new ArrayList<>();
             Scanner in = new Scanner(System.in);
             if (input != null) {
@@ -76,8 +74,5 @@ public class Transposer {
             int max = trans.findMax(text);
             String[][] txt = trans.toMatrix(max,text);
             trans.transpose(txt, max, output, rStaus, tStatus, wordsize);
-        }catch (NoSuchFileException e){
-            System.err.println("Invalid file name entered. Correct file name or add the full path to the file!");
         }
-    }
     }

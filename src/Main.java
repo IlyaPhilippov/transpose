@@ -11,10 +11,13 @@ public class Main {
             begin.Transpose(start.getOutputname(), start.getrStatus(), start.gettStatus(), start.getWordsize(), start.getInputname());
         }catch (NumberFormatException e){
             System.err.println("Incorrect word size");
+            System.exit(1);
         }catch (IllegalArgumentException e){
             System.err.println("Too much arguments");
+            System.exit(1);
         }catch(NoSuchFileException e){
             System.err.println("Invalid file name entered. Correct file name or add the full path to the file!");
+            System.exit(1);
         }
     }
 }
