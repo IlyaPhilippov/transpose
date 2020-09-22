@@ -1,3 +1,0 @@
-hello     test      testing   русские   
-world               method    текст     
-                              проверка  

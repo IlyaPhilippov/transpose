@@ -10,12 +10,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class test {
     @Test
-    public void analise() {
-        assertThrows(IllegalArgumentException.class, () -> new Analyzer(new String[] {"testfile1", "testfile2", "testfile3", "testfile4"}).analise());
-        assertThrows(IllegalArgumentException.class, () -> new Analyzer(new String[] {"-a", "10abc"}).analise());
-        assertThrows(IllegalArgumentException.class, () -> new Analyzer(new String[] {"outputname", "inputname"}).analise());
-    }
-    @Test
     public void main() throws IOException {
         String[] args1 = {"tests/inputfile", "-o", "tests/actual1" , "-a", "10"};
         Main.main(args1);

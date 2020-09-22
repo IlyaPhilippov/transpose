@@ -16,13 +16,9 @@ public class Analyzer {
         for ( i = 0; i < args.length; i++){
             switch (args[i]){
                 case "-a":
-                    try {
-                        wordsize = Integer.parseInt(args[i + 1]);
-                        i++;
-                        break;
-                    } catch(NumberFormatException e) {
-                        throw new IllegalArgumentException("Incorrect word size!");
-                    }
+                    wordsize = Integer.parseInt(args[i + 1]);
+                    i++;
+                    break;
                 case "-r":
                     rStatus = true;
                     break;
